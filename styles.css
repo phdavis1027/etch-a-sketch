@@ -1,0 +1,30 @@
+:root{
+    --tulip-tree: rgba(237, 189, 62,0)
+}
+
+html,body{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.table{
+    width: 75%;
+    height: 80%;
+    border-style: solid;
+    border-color: burlywood;
+    border-width: 3px;
+    background-color: var(--tulip-tree);
+    margin: 10% auto;
+}
+
+.row{
+    width: 100%;
+    height: 10%;
+}
+
+.cell{
+    display: inline-block;
+    outline: 2px solid white;
+    background-color: cadetblue;
+}
