@@ -1,7 +1,7 @@
 const dims = 10; //testing out ideal way to get a grid up and running
 
-const table = document.querySelector(".table");
-const cells = new Array(); 
+const table = document.querySelector(".table"); 
+let etch;
 window.onload = ()=>{
     let tableWidth = table.getBoundingClientRect().width;
     let tableHeight = table.getBoundingClientRect().height;
@@ -16,11 +16,17 @@ window.onload = ()=>{
             cell.style.width = dims.toString() + "%";
             cell.style.height = "100%";
             row.appendChild(cell);
-            cells.push(cell);
         }
-    }
-    console.log(cells);
-    for(let cell in cells){
-        
-    }
+    }  
+    
+    const cells = document.querySelectorAll(".cell");
+    cells.forEach((c)=>{
+        c.addEventListener('mouseover',()=>{
+            if(c.classList.contains('empty')){
+                c.style.backgroundColor = "blue";
+                c.classList.remove('empty')
+            }
+        })
+    })
 };
+

@@ -15,7 +15,7 @@ html,body{
     border-color: burlywood;
     border-width: 3px;
     background-color: var(--tulip-tree);
-    margin: 10% auto;
+    margin: 1% auto;
 }
 
 .row{
@@ -25,6 +25,13 @@ html,body{
 
 .cell{
     display: inline-block;
-    outline: 2px solid white;
-    background-color: cadetblue;
+    outline: 1px solid white;
+}
+
+.empty{
+    background-color: grey;
+}
+
+.selected-standard{
+    background-color: green;
 }
