@@ -8,14 +8,86 @@ html,body{
     padding: 0;
 }
 
+.controls{
+    border-style: solid;
+    border-color: tomato;
+    width: 80%;
+    height: 10%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    margin-bottom: 5px;
+    border-radius: 20%;
+}
+
+.etch{
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-color: violet;
+    height: 100%;
+    width: 33%;
+    white-space: nowrap;
+    align-items: center;
+}   
+
+.choice{
+    position: relative;
+    border-style: solid;
+    border-color: yellow;
+    width: 20%;
+    height: 50%;
+    margin: auto;
+    border-radius: 100%;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.stroke{
+    background-image: url("/assets/images/pen.png");
+}
+
+.erase{
+    background-image: url("/assets/images/expo.jpg");
+}
+
+.wildcard{
+    background-image:url("/assets/images/rainbow-flag-plain.jpg");
+    background-size: cover;
+}
+
+.reset::before,
+.reset::after{
+    position: absolute;
+    content: "";
+    display: inline-block;
+    border-style:solid;
+    border-color: black;
+    background-color: black;
+    height: 112%;
+    width: 1%;
+    left: 50%;
+    margin-left: -4%;
+    top: -20%;
+}
+
+.reset::before{
+    transform: rotate(45deg);
+}
+
+.reset::after{
+    transform: rotate(135deg);
+}
+
 .table{
-    width: 75%;
+    width: 80%;
     height: 80%;
     border-style: solid;
     border-color: burlywood;
     border-width: 3px;
-    background-color: var(--tulip-tree);
-    margin: 1% auto;
+    background-color: grey;
+    margin: 0 auto;
 }
 
 .row{
