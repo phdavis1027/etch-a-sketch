@@ -9,10 +9,13 @@ html,body{
 }
 
 .controls{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     border-style: solid;
     border-color: tomato;
-    width: 80%;
-    height: 10%;
+    width: 90%;
+    height: 15%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10%;
@@ -69,7 +72,7 @@ html,body{
     width: 1%;
     left: 50%;
     margin-left: -4%;
-    top: -20%;
+    top: -15%;
 }
 
 .reset::before{
@@ -78,6 +81,27 @@ html,body{
 
 .reset::after{
     transform: rotate(135deg);
+}
+
+.reset:hover::before,
+.reset:hover::after{
+    border-color: violet;
+    background-color: violet;
+}
+
+.size-container{
+    width: 66%;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 10px;
+}
+
+.size-container > div{
+    background-color: grey;
+    border: solid grey;
+    flex-grow: 1;
 }
 
 .table{
