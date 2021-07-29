@@ -1,15 +1,17 @@
-const dims = 10; //testing out ideal way to get a grid up and running
 const table = document.querySelector(".table"); 
 const selectors = document.querySelector(".size-container")
+const tableWidth = table.getBoundingClientRect().width;
+const tableHeight = table.getBoundingClientRect().height;
+let dims = 10;
 let etch = "stroke";
 window.onload = ()=>{
     initializeTable();
     initializeSelector();
 };
 
+let mouseIsDown = false;
+
 function initializeTable(){
-    let tableWidth = table.getBoundingClientRect().width;
-    let tableHeight = table.getBoundingClientRect().height;
     for(let i = 1; i<=dims; i++){
         let row = document.createElement("div")
         row.classList.add("row");
@@ -37,7 +39,6 @@ function initializeTable(){
 function initializeSelector(){
     injectSlider();
     addSliderListeners();
-    
 }
 
 function injectSlider(){
@@ -52,13 +53,25 @@ function injectSlider(){
 }
 
 function addSliderListeners(){
-    let selectorDivs = selectors.querySelectorAll(".div");
+    let selectorDivs = selectors.querySelectorAll("div");
+
     selectorDivs.forEach((s)=>{
-        s.addEventListener("click", ()=>{
-            console.log("event heard")
-            let size = s.getAttribute("id")
-            dims = parseInt(size)
-            updateSlider(size, selectorDivs);
+
+        s.addEventListener("mousedown", ()=>{
+            mouseIsDown = true;
+        })
+
+        s.addEventListener("mouseup", ()=>{
+            mouseIsDown = false;
+        })
+
+        s.addEventListener("mouseover", ()=>{
+            if(mouseIsDown){
+                let size = parseInt(s.getAttribute("id"))
+                dims = parseInt(size)
+                updateSlider(size, selectorDivs);
+                updateTable()
+            }
         })
     })
 }
@@ -74,4 +87,19 @@ function updateSlider(size, selectorDivs){
             s.style.border = "solid grey"
         }
     })
+}
+
+function updateTable(){
+    clearTable();
+}
+
+function clearTable(){
+    let rows = document.querySelectorAll(".row")
+    rows.forEach((r)=>{
+        let cells = r.querySelectorAll(".cell")
+        cells.forEach((c)=>{
+            c.style.backgroundColor="grey"
+        })
+    })
+
 }
