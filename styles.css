@@ -126,6 +126,10 @@ html,body{
     background-color: grey;
 }
 
+.full{
+    background-color: black;
+}
+
 .selected-standard{
     background-color: green;
 }

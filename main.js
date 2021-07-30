@@ -33,7 +33,8 @@ function initializeTable(){
     cells.forEach((c)=>{
         c.addEventListener('mouseover',()=>{
             if(c.classList.contains('empty')){
-                c.style.backgroundColor = "black";
+                c.classList.remove("empty")
+                c.classList.add("full")
             }
         })
     })
@@ -106,7 +107,10 @@ function clearTable(){
     rows.forEach((r)=>{
         let cells = r.querySelectorAll(".cell")
         cells.forEach((c)=>{
-            c.classList.add("empty")
+            if(c.classList.contains("full")){
+                c.classList.add("empty")
+                c.classList.remove("full")
+            }
         })
     })
 }
@@ -148,6 +152,12 @@ function adjustDims(){
                 cell.style.width = (100 / dims) + "%";
                 cell.setAttribute("id", "cell-" + newCell.toString())
                 row.appendChild(cell);
+                cell.addEventListener('mouseover',()=>{
+                    if(cell.classList.contains('empty')){
+                        cell.classList.remove("empty")
+                        cell.classList.add("full")
+                    }
+                })
             }
         }
         for (let rows = 1; rows <= oldDims; rows++){//resize old rows
@@ -164,6 +174,12 @@ function adjustDims(){
                 cell.style.width = (100 / dims) + "%";
                 cell.setAttribute("id", "cell-" + newCells.toString())
                 row.appendChild(cell)
+                cell.addEventListener('mouseover',()=>{
+                    if(cell.classList.contains('empty')){
+                        cell.classList.remove("empty")
+                        cell.classList.add("full")
+                    }
+                })
             }
         }
     }
