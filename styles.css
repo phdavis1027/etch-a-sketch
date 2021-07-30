@@ -14,7 +14,7 @@ html,body{
     align-items: center;
     border-style: solid;
     border-color: tomato;
-    width: 90%;
+    width: 700px;
     height: 15%;
     margin-left: auto;
     margin-right: auto;
@@ -105,11 +105,12 @@ html,body{
 }
 
 .table{
-    width: 80%;
-    height: 80%;
+    width: 500px;
+    height: 500px;
     outline: 1px solid burlywood;
     background-color: grey;
     margin: 0 auto;
+    padding: 0;
 }
 
 .row{
@@ -128,8 +129,4 @@ html,body{
 
 .full{
     background-color: black;
-}
-
-.selected-standard{
-    background-color: green;
 }

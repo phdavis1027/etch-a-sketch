@@ -2,14 +2,20 @@ const table = document.querySelector(".table");
 const selectors = document.querySelector(".size-container")
 const tableWidth = table.getBoundingClientRect().width;
 const tableHeight = table.getBoundingClientRect().height;
+const clearButton = document.querySelector(".reset")
 let dims = 10;
 let etch = "stroke";
 window.onload = ()=>{
     initializeTable();
     initializeSelector();
+    initializeControls();
 };
 
 let mouseIsDown = false;
+
+function initializeControls(){
+    clearButton.addEventListener('click',clearTable)
+}
 
 function initializeTable(){
     for(let i = 1; i<=dims; i++){
