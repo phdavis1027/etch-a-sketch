@@ -19,29 +19,16 @@ function initializeControls(){
 
 function initializeTable(){
     for(let i = 1; i<=dims; i++){
-        let row = document.createElement("div")
-        row.classList.add("row");
-        row.setAttribute("id", "row-" + i.toString())
-        row.style.height = (100/dims).toString() + "%"
-        row.style.width = "100%"
-        table.appendChild(row);
+        let row = createAndConfigureRow(i)
         for(let j = 1; j<= dims;j++){
-            let cell = document.createElement("div");
-            cell.classList.add("cell");
-            cell.classList.add("empty");
-            cell.style.width = dims + "%";
-            cell.setAttribute("id", "cell-" + j.toString())
-            row.appendChild(cell);
+           createAndConfigureCell(j, row)
         }
     }  
     
     const cells = document.querySelectorAll(".cell")
     cells.forEach((c)=>{
         c.addEventListener('mouseover',()=>{
-            if(c.classList.contains('empty')){
-                c.classList.remove("empty")
-                c.classList.add("full")
-            }
+            makeCellResponsive(c)
         })
     })
 }
@@ -71,6 +58,7 @@ function addSliderListeners(){
             mouseIsDown = true;
             let size = parseInt(s.getAttribute("id"))
             dims = parseInt(size)
+            console.log(dims)
             updateSlider(size, selectorDivs);
             updateTable()
         })
@@ -112,12 +100,7 @@ function clearTable(){
     let rows = document.querySelectorAll(".row")
     rows.forEach((r)=>{
         let cells = r.querySelectorAll(".cell")
-        cells.forEach((c)=>{
-            if(c.classList.contains("full")){
-                c.classList.add("empty")
-                c.classList.remove("full")
-            }
-        })
+        cells.forEach((c)=>{ clearCell(c)})
     })
 }
 
@@ -132,61 +115,107 @@ function adjustDims(){
 
         for (let rows = 1; rows <= dims; rows++){//resize old rows
             let row = table.querySelector("#row-"+rows)
-            row.style.height = (100/dims).toString() + "%"
-            for(let cells = 1; cells <= oldDims; cells++){
-                let cell = row.querySelector("#cell-"+cells)
-                if(cells <= dims){
-                    cell.style.width = (100 / dims).toString() + "%"
-                }
-                else{
-                    row.removeChild(cell)
-                }
-            }
+            resizeOldRow(row)
+            removeOldCellsAndResizeCellsInRow(row, oldDims, dims)
         }
     }
     if(oldDims < dims){
-        for(let newRow = oldDims + 1; newRow <= dims; newRow++){ //add new rows
-            let row = document.createElement("div");
-            row.setAttribute("id", "row-" + newRow.toString())
-            row.classList.add("row")
-            row.style.height = (100 / dims).toString() + "%"
-            table.appendChild(row)
-            for (let newCell = 1; newCell <= dims; newCell++){
-                let cell = document.createElement("div");
-                cell.classList.add("cell");
-                cell.classList.add("empty");
-                cell.style.width = (100 / dims) + "%";
-                cell.setAttribute("id", "cell-" + newCell.toString())
-                row.appendChild(cell);
-                cell.addEventListener('mouseover',()=>{
-                    if(cell.classList.contains('empty')){
-                        cell.classList.remove("empty")
-                        cell.classList.add("full")
-                    }
-                })
+        for(let newRows = oldDims + 1; newRows <= dims; newRows++){ //add new rows
+            let row = createAndConfigureRow(newRows)
+            for (let newCells = 1; newCells <= dims; newCells++){ 
+                createAndConfigureCell(newCells, row)
             }
         }
-        for (let rows = 1; rows <= oldDims; rows++){//resize old rows
+        for (let rows = 1; rows <= oldDims; rows++){
             let row = table.querySelector("#row-"+rows)
-            row.style.height = (100/dims).toString() + "%"
-            for(let cells = 1; cells <= oldDims; cells++){ //resize old cells
-                let cell = row.querySelector("#cell-" + cells)
-                cell.style.width = (100/dims).toString() + "%"
-            }
-            for(let newCells = oldDims + 1; newCells <= dims; newCells++){ //inject new cells into old rows
-                let cell = document.createElement("div")
-                cell.classList.add("cell")
-                cell.classList.add("empty")
-                cell.style.width = (100 / dims) + "%";
-                cell.setAttribute("id", "cell-" + newCells.toString())
-                row.appendChild(cell)
-                cell.addEventListener('mouseover',()=>{
-                    if(cell.classList.contains('empty')){
-                        cell.classList.remove("empty")
-                        cell.classList.add("full")
-                    }
-                })
+            resizeOldRow(row)
+            for(let newCells = 1; newCells <= dims; newCells++){ //inject new cells into old rows
+                if (newCells > oldDims) createAndConfigureCell(newCells, row)
+                else{
+                    let cell = row.querySelector("#cell-"+newCells)
+                    resizeCell(cell)
+                }
             }
         }
     }
+}
+
+function makeCellResponsive(cell){ //adds the appropriate event listeners to each cell
+    cell.addEventListener('mousedown',()=>{
+        mouseIsDown = true
+        fillCell(cell)
+    })
+
+    cell.addEventListener('mouseup',()=>{
+        mouseIsDown = false
+    })
+
+    cell.addEventListener('mouseover',()=>{
+        if (mouseIsDown && cell.classList.contains('empty')){
+            fillCell(cell)
+        }
+    })
+}
+
+function fillCell(cell){ // fills in color by reference to stylesheet
+        cell.classList.remove('empty')
+        cell.classList.add('full')
+}
+
+function clearCell(cell){
+    if(cell.classList.contains("full")){
+        cell.classList.remove("full")
+        cell.classList.add("empty")
+    }
+}
+
+function createAndConfigureCell(num, row){
+    let cell = document.createElement("div");
+    cell.classList.add("cell");
+    cell.classList.add("empty");
+    cell.style.width = (100 / dims) + "%";
+    cell.setAttribute("id", "cell-" + num.toString())
+    makeCellResponsive(cell)
+    row.appendChild(cell);
+}
+
+function createAndConfigureRow(num){
+    let row = document.createElement("div");
+    row.setAttribute("id", "row-" + num.toString())
+    row.classList.add("row")
+    row.style.height = (100 / dims).toString() + "%"
+    table.appendChild(row)
+    return row
+}
+
+function resizeOldRow(row){
+    row.style.height = (100/dims).toString() + "%"
+}
+
+function addNewCellsToOldRow(row, oldDim0s){
+    for(let cells = 1; cells <= oldDims; cells++){
+        let cell = row.querySelector("#cell-"+cells)
+        if(cells <= dims){
+            cell.style.width = (100 / dims).toString() + "%"
+        }
+        else{
+            row.removeChild(cell)
+        }
+    }
+}
+
+function removeOldCellsAndResizeCellsInRow(row,newDims){
+    for (let cells = 1; cells <= newDims; cells++){
+        let cell = row.querySelector("#cell-" + cells)
+        if(cells > dims){
+            row.removeChild(cell)
+        }
+        else{
+            resizeCell(cell)
+        }
+    }
+}
+
+function resizeCell(cell){
+    cell.style.width = (100 / dims) + "%"
 }
