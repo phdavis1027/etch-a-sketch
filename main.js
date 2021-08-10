@@ -9,16 +9,24 @@ const wildCard = document.querySelector(".wildcard");
 const body = document.querySelector("body");
 const reset = document.querySelector(".reset");
 const erase = document.querySelector(".erase");
+const etch = document.querySelector(".etch")
+const techno = document.querySelector(".techno")
+
 
 const pointHandlerDotDrawer = function(){
-    fillCell(this);
-    this.removeEventListener('mousedown', pointHandlerDotDrawer)
+    if(!isErasing){
+        fillCell(this);
+        this.removeEventListener('mousedown', pointHandlerDotDrawer)
+    }
 }
 
 const strokeHandler = function(){
-    if (mouseIsDown && this.classList.contains('empty')){
-        fillCell(this)
-        this.removeEventListener("mouseover", strokeHandler)
+
+    if(!isErasing){
+        if (mouseIsDown && this.classList.contains('empty')){
+            fillCell(this)
+            this.removeEventListener("mouseover", strokeHandler)
+        }
     }
 }
 
@@ -27,14 +35,14 @@ const eraseHandlerMouseDown = function(){
     this.removeEventListener('mousedown', eraseHandlerMouseDown)
 }
 const eraseHandlerMouseOver = function(){
-    if (mouseIsDown){clearCell(this)
-        this.removeEventListener('mouseover', eraseHandlerMouseDown)
-    }
+    clearCell(this)
+    this.removeEventListener('mouseover', eraseHandlerMouseDown)
 }
 
 let isErasing = false;
+let isCrazy = false;
+let mouseIsDown = false;
 let dims = 10;
-let etch = "stroke";
 let fillCell;
 window.onload = ()=>{
     initializeTable();
@@ -42,7 +50,6 @@ window.onload = ()=>{
     initializeControls();
 };
 
-let mouseIsDown = false;
 
 function initializeControls(){
     clearButton.addEventListener('click',clearTable);
@@ -56,7 +63,11 @@ let toggleErase = function(){
             let row = table.querySelector("#row-"+rows);
             for(let cells = 1; cells<=dims; cells++){
                 let cell = row.querySelector("#cell-"+cells);
+                cell.removeEventListener('mousedown', pointHandlerDotDrawer)
+                cell.removeEventListener('mouseover', strokeHandler)
                 if(cell.classList.contains("full")){
+
+        
 
                     cell.addEventListener('mouseover', eraseHandlerMouseOver)
                     cell.addEventListener('mouseover', ()=>{
@@ -70,11 +81,6 @@ let toggleErase = function(){
 
 
                 }
-                else{ // fire and undo event so that empty cells cannot be drawn into while in erase mode
-                    cell.click()
-                    clearCell(cell)
-                    cell.removeEventListener('mouseover', strokeHandler)
-                }
             }
         }
         erase.style.boxShadow = "inset 2px 2px 1px darkgray"
@@ -82,13 +88,17 @@ let toggleErase = function(){
         return
     }
     if(isErasing){
-        // for (let rows = 1; rows <= dims; rows++){
-        //     let row = table.querySelector("#row-"+rows);
-        //     for(let cells = 1; cells<=dims; cells++){
-        //         let cell = row.querySelector("#cell-"+cells);
-        //         makeCellResponsive(cell);
-        //     }
-        // }
+        for (let rows = 1; rows <= dims; rows++){
+            let row = table.querySelector("#row-"+rows);
+            for(let cells = 1; cells<=dims; cells++){
+                let cell = row.querySelector("#cell-"+cells);
+                cell.removeEventListener('mouseover', eraseHandlerMouseOver)
+                cell.removeEventListener('mousedown', eraseHandlerMouseDown) 
+
+                cell.addEventListener('mousedown', pointHandlerDotDrawer)
+                cell.addEventListener('mouseover', strokeHandler)
+            }
+        }
         erase.style.boxShadow = '';
         isErasing = false;
     }
@@ -113,6 +123,8 @@ function initializeTable(){
 function initializeSelector(){
     injectSlider();
     addSliderListeners();
+    let selectorDivs = selectors.querySelectorAll("div");
+    updateSlider(dims, selectorDivs)
 }
 
 function injectSlider(){
@@ -156,45 +168,93 @@ function addSliderListeners(){
 function updateSlider(size, selectorDivs){
     selectorDivs.forEach((s)=>{
         let divSize = parseInt(s.getAttribute("id"))
-        if (divSize <= size){
-            s.style.backgroundColor = "black"
-            s.style.border = "solid black"
-        }else{
-            s.style.backgroundColor = "grey"
-            s.style.border = "solid grey"
-        }
-    })
+            if(!isCrazy){
+                if (divSize <= size){
+                    s.style.backgroundColor = "black"
+                    s.style.border = "solid black"
+                }else{
+                    s.style.backgroundColor = "grey"
+                    s.style.border = "solid grey"
+                }
+            }else{
+                if(divSize <= size){
+                    let r = getRandomInt(0, 255);
+                    let g = getRandomInt(0, 255);
+                    let b = getRandomInt(0, 255);
+                    let a = 0.5;
+                    s.style.backgroundColor = "rgba(" + r + "," + g + "," + b + "," + a + ")"; 
+                    s.style.border = "solid rgba(" + r + "," + g + "," + b + "," + a + ")"; 
+                    s.style.backgroundClip = "content-box";
+                }else{
+                    s.style.backgroundColor = "cadetblue"
+                    s.style.border = "solid cadetblue"
+                }
+            }
+        })
 }
 
 function goCrazy(){
-    giveCrazyLook();
-    modifyControls();
+    if(!isCrazy){
+        isCrazy = true;
+        giveCrazyLook();
+        techno.currentTime = 10;
+        techno.play();
+        document.querySelectorAll(".reset").forEach((s)=>{
+            s.addEventListener("mousedown", ()=>{
+                location = location
+            });
+        })
+    }
 }
 
+
 let giveCrazyLook = function(){
-    body.classList.add("crazy");
+    body.classList.add("bg-crazy");
     let controls = document.querySelector(".etch");
     controls.removeChild(document.querySelector(".stroke"));
     controls.removeChild(document.querySelector(".erase"));
+    controls.removeChild(document.querySelector(".wildcard"))
+    if(isErasing){
+        toggleErase();
+    }
     fillCell = function(cell){
         let r = getRandomInt(0, 255);
         let g = getRandomInt(0, 255);
         let b = getRandomInt(0, 255);
         let a = 0.5;
-
-        console.log(r + "," + g + "," + b + "," + a);
         cell.style.backgroundColor=  "rgba(" + r + "," + g + "," + b + "," + a + ")"; 
     }
     for (let rows = 1; rows <= dims; rows++){ //change all currently existing cells to the weird way of drawing
         let row = table.querySelector("#row-"+rows) //and make sure empty cells get filled with weird colors
-      for (let cells = 0; cells < dims; cells++){
+      for (let cells = 1; cells <= dims; cells++){
         let cell = row.querySelector("#cell-"+cells)
-        makeCellResponsive(cell);
+        cell.classList.add("cell-crazy")
         if(cell.classList.contains("full")) {
+            clearCell(cell);
             fillCell(cell);
         }
       }
     }
+
+    let selectorDivs = selectors.querySelectorAll(".size-choice")
+    selectorDivs.forEach((s)=>{
+        let r = getRandomInt(0, 255);
+        let g = getRandomInt(0, 255);
+        let b = getRandomInt(0, 255);
+        let a = 0.5;
+        let divSize = parseInt(s.getAttribute("id"))
+        if (divSize <= dims){
+            s.style.backgroundColor = "rgba(" + r + "," + g + "," + b + "," + a + ")"; 
+            s.style.border = "solid rgba(" + r + "," + g + "," + b + "," + a + ")"; 
+            s.style.backgroundClip = "content-box";
+        }else{
+            s.style.backgroundColor = "cadetblue"
+            s.style.border = "solid cadetblue"
+        }
+    })
+
+    selectors.classList.add("ps-crazy")
+    etch.classList.add("ps-crazy")
 }
 
 
@@ -288,15 +348,19 @@ function clearCell(cell){
         cell.classList.remove("full")
         cell.classList.add("empty")
     }
+    if(isCrazy){
+        cell.style.backgroundColor = "cadetblue"
+    }
 }
 
 function createAndConfigureCell(num, row){
     let cell = document.createElement("div");
+    if(isCrazy){cell.classList.add("cell-crazy")}
     cell.classList.add("cell");
     cell.classList.add("empty");
     cell.style.width = (100 / dims) + "%";
     cell.setAttribute("id", "cell-" + num.toString())
-    makeCellResponsive(cell)
+    makeCellResponsive(cell);
     row.appendChild(cell);
 }
 
@@ -341,21 +405,6 @@ function resizeCell(cell){
     cell.style.width = (100 / dims) + "%"
 }
 
-let fireEvent = function (elementId, eventName){
-    if( document.getElementById(elementId) != null )    
-    {   
-        if( document.getElementById( elementId ).fireEvent ) 
-        {
-            document.getElementById( elementId ).fireEvent( 'on' + eventName );     
-        }
-        else 
-        {   
-            var evObj = document.createEvent( 'Events' );
-            evObj.initEvent( eventName, true, false );
-            document.getElementById( elementId ).dispatchEvent( evObj );
-        }
-    }
-}
 
 
 

@@ -29,7 +29,25 @@ html,body{
     width: 33%;
     white-space: nowrap;
     align-items: center;
+    position: relative;
 }   
+
+.etch::after{
+    content: '';
+    border-style: solid;
+    border-color: grey;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 5%;
+}
+
+.etch.ps-crazy::after{
+    border: solid cadetblue;
+    background-color: cadetblue;
+    background-clip: padding-box;
+}
+
 
 .choice{
     position: relative;
@@ -85,13 +103,45 @@ html,body{
     box-shadow: 2px 2px 1px darkgray;
 }
 
+
+
 .size-container{
+    position: relative;
     width: 66%;
     height: 50%;
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     padding: 10px;
+}
+
+.size-container::before{
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-color: grey;
+    background-color: black;
+    left: 0;
+    bottom: 0;
+    top: 0;
+}
+
+.size-container::after{
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-color: grey;
+    height: 0;
+    right: 1.5%;
+    left: 0;
+    bottom: 0;
+}
+
+.size-container.ps-crazy::after,
+.size-container.ps-crazy::before{
+    border: solid cadetblue;
+    background-color: cadetblue;
+    background-clip: content-box;
 }
 
 .size-container > div{
@@ -123,7 +173,7 @@ html,body{
     background-color: black;
 }
 
-.crazy{
+.bg-crazy{
     background-size: 400%;
     background-attachment: fixed;
     background-image: linear-gradient(45deg, 
@@ -166,4 +216,8 @@ html,body{
         background-position: right;
         opacity:0.5;
     }
+}
+
+.cell-crazy{
+    background-color: cadetblue;
 }
