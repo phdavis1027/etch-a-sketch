@@ -8,12 +8,11 @@ html,body{
     padding: 0;
 }
 
+
 .controls{
     display: flex;
     flex-direction: row;
     align-items: center;
-    border-style: solid;
-    border-color: tomato;
     width: 700px;
     height: 50px;
     margin-left: auto;
@@ -26,8 +25,6 @@ html,body{
 .etch{
     display: flex;
     flex-direction: row;
-    border-style: solid;
-    border-color: violet;
     height: 100%;
     width: 33%;
     white-space: nowrap;
@@ -36,8 +33,6 @@ html,body{
 
 .choice{
     position: relative;
-    border-style: solid;
-    border-color: yellow;
     width: 20%;
     height: 50%;
     margin: auto;
@@ -68,7 +63,7 @@ html,body{
     border-style:solid;
     border-color: black;
     background-color: black;
-    height: 112%;
+    height: 100%;
     width: 1%;
     left: 50%;
     margin-left: -4%;
@@ -83,10 +78,11 @@ html,body{
     transform: rotate(135deg);
 }
 
-.reset:hover::before,
-.reset:hover::after{
-    border-color: violet;
-    background-color: violet;
+
+.choice:hover{
+    width: 25%;
+    height: 55%;
+    box-shadow: 2px 2px 1px darkgray;
 }
 
 .size-container{
@@ -99,15 +95,12 @@ html,body{
 }
 
 .size-container > div{
-    background-color: grey;
-    border: solid grey;
     flex-grow: 1;
 }
 
 .table{
     width: 500px;
     height: 500px;
-    outline: 1px solid burlywood;
     background-color: grey;
     margin: 0 auto;
 }
@@ -128,4 +121,49 @@ html,body{
 
 .full{
     background-color: black;
+}
+
+.crazy{
+    background-size: 400%;
+    background-attachment: fixed;
+    background-image: linear-gradient(45deg, 
+    #a175a0 10%, 
+    #eef522 20%, 
+    #22f530 30%, 
+    #f52522 40%,
+    #a175a0 50%, 
+    #eef522 60%, 
+    #22f530 70%, 
+    #f52522 80%,
+    #a175a0 90%, 
+    #eef522 100%);
+    animation: crazy-background 1s infinite alternate; 
+}
+
+@keyframes crazy-background{
+    0%{
+        background-position: left;
+        opacity: 0;
+    }
+
+    20%{
+        opacity: 0.5;
+    }
+
+    40%{
+        opacity: 0; 
+    }
+
+    60%{
+        opacity: 0.5;
+    }
+
+    80%{
+        opacity: 0;
+    }
+
+    100%{
+        background-position: right;
+        opacity:0.5;
+    }
 }
